@@ -8,7 +8,7 @@ module.exports = {
   messages: {
 
     get: function (req, res) { // a function which handles a get request for all messages
-      console.log(req.url)
+      // console.log(req.url)
       models.messages.get(req,res);
 
     },

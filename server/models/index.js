@@ -12,19 +12,21 @@ var defaultCorsHeaders = {
 module.exports = {
   messages: {
     get: function (req, res) {
-      var room = req.body.roomname || '*'
-      console.log('room', room)
-      connect.query('SELECT * FROM messages JOIN users ON messages.userId=users.id;', function(err, result){//access roomname
+      // var room = req.body.roomname || '*'
+      // console.log('room', room)
+      connect.query('SELECT * FROM messages', function(err, result){//access roomname
         if (err) throw err; 
         else {
-          return result
+          // return result
+          console.log('join',result)
           res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client
-          res.end(result)
+          res.end(JSON.stringify(result))
         }
       })
     }, // a function which produces all the messages
 
     post: function (req, res) {
+      // console.log(req.body.message)
       // exports.users.post(req, res)
       var userID = connect.query('SELECT id FROM users WHERE userName = "'+req.body.username + '";', function(err, result) {
         if (err) throw err;
@@ -35,6 +37,7 @@ module.exports = {
         if (err) throw err; 
         else {
           //adding data to users database
+          console.log('posted')
           res.writeHead(200, defaultCorsHeaders);    
           res.end()      
         }
@@ -44,7 +47,7 @@ module.exports = {
 
   users: {
     get: function (req, res) {
-      connect.query('SELECT * FROM users WHERE userName = "'+ req.body.username + '";', function(err, result){//access roomname
+      connect.query('SELECT * FROM users WHERE userName = '+ req.body.username + ';', function(err, result){//access roomname
         if (err) throw err; 
         else {
           res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client

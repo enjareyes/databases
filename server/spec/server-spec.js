@@ -34,6 +34,7 @@ describe("Persistent Node Chat Server", function() {
               json: { username: "Valjean" }
     }, function () {
       // Post a message to the node chat server:
+      console.log('trying to do sql')
       request({ method: "POST",
               uri: "http://127.0.0.1:3000/classes/messages",
               json: {
@@ -52,6 +53,7 @@ describe("Persistent Node Chat Server", function() {
 
         dbConnection.query(queryString, queryArgs, function(err, results) {
           // Should have one result:
+          console.log('query result', results)
           expect(results.length).to.equal(1);
 
           // TODO: If you don't have a column named text, change this test.
@@ -65,11 +67,13 @@ describe("Persistent Node Chat Server", function() {
 
   it("Should output all messages from the DB", function(done) {
     // Let's insert a message into the db
-       var queryString = "SELECT * FROM messages"; //?
-       var queryArgs = [];
+       var queryString = 'INSERT INTO messages (message, UserId, roomname) VALUES (?, ?, ?)'; //?
+       var queryArgs = ['test', 1000, 'lobby'];
     // TODO - The exact query string and query args to use
     // here depend on the schema you design, so I'll leave
     // them up to you. */
+
+    // connect.query('INSERT INTO messages SET ?', {message: req.body.message, userId: userID, roomname: req.body.roomname}
 
     dbConnection.query(queryString, queryArgs, function(err) {
       if (err) { throw err; }
@@ -77,9 +81,14 @@ describe("Persistent Node Chat Server", function() {
       // Now query the Node chat server and see if it returns
       // the message we just inserted:
       request("http://127.0.0.1:3000/classes/messages", function(error, response, body) {
+        console.log('body', ''+body);
         var messageLog = JSON.parse(body);
-        expect(messageLog[0].message).to.equal("Men like you can never change!");
-        expect(messageLog[0].roomname).to.equal("main");
+        console.log('messageLog',messageLog);
+
+
+
+        expect(messageLog[0].message).to.equal("test");
+        expect(messageLog[0].roomname).to.equal("lobby");
         done();
       });
     });

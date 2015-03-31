@@ -32,7 +32,7 @@ $(function() {
       app.fetch(false);
 
       // Poll for new messages
-      setInterval(app.fetch, 3000);
+      // setInterval(app.fetch, 3000);
     },
     send: function(data) {
       app.startSpinner();
@@ -43,7 +43,8 @@ $(function() {
       $.ajax({
         url: app.server,
         type: 'POST',
-        data: JSON.stringify(data),
+        json: data,
+        // data: JSON.stringify(data),
         contentType: 'application/json',
         success: function (data) {
           console.log('chatterbox: Message sent' + data);
