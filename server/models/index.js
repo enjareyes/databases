@@ -1,30 +1,37 @@
-var db = require('../db');
+var db = require('../db/index.js');
+var connect = require('../db/index.js');
 
-
-
+var defaultCorsHeaders = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "access-control-allow-headers": "contentType, accept, data, Content-Type",
+  "access-control-max-age": 10 // Seconds.
+  //need to allow all headers, e.g. data.
+};
 
 module.exports = {
   messages: {
-    get: function () {
-      var room = req.json.roomname || '*'
-      connection.query('SELECT * FROM messages JOIN users ON messages.userId=users.userId WHERE roomname = '+ room, function(err, result){//access roomname
+    get: function (req, res) {
+      var room = req.body.roomname || '*'
+      console.log('room', room)
+      connect.query('SELECT * FROM messages JOIN users ON messages.userId=users.id;', function(err, result){//access roomname
         if (err) throw err; 
         else {
+          return result
           res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client
-          res.end()
+          res.end(result)
         }
       })
     }, // a function which produces all the messages
 
-    post: function () {
-      exports.users.post(req, res)
-      debugger
-      var userID = connection.query('SELECT userId FROM users WHERE username = '+req.json.username, function(err, result) {
+    post: function (req, res) {
+      // exports.users.post(req, res)
+      var userID = connect.query('SELECT id FROM users WHERE userName = "'+req.body.username + '";', function(err, result) {
         if (err) throw err;
         else { return result }
       })
 
-      connection.query('INSERT INTO users VALUES (' + req.json.message + ',' + userID + ',' + req.json.roomname + ')', function(err, result){ 
+      connect.query('INSERT INTO messages SET ?', {message: req.body.message, userId: userID, roomname: req.body.roomname}, function(err, result){
         if (err) throw err; 
         else {
           //adding data to users database
@@ -36,8 +43,8 @@ module.exports = {
   },
 
   users: {
-    get: function () {
-      connection.query('SELECT * FROM users WHERE username = '+ req.json.username, function(err, result){//access roomname
+    get: function (req, res) {
+      connect.query('SELECT * FROM users WHERE userName = "'+ req.body.username + '";', function(err, result){//access roomname
         if (err) throw err; 
         else {
           res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client
@@ -45,8 +52,9 @@ module.exports = {
         }
       })
     },
-    post: function () {
-      connection.query('INSERT INTO users VALUES' + req.json.username, function(err, result){ 
+    post: function (req, res) {
+      // connect.query('INSERT INTO users (userName) VALUES (' + req.body.username + ');', function(err, result){ 
+      connect.query('INSERT INTO users SET ?', {userName: req.body.username}, function(err, result){
         if (err) throw err; 
         else {
           //adding data to messages database

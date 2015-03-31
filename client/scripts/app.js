@@ -55,9 +55,9 @@ $(function() {
         }
       });
     },
-    fetch: function(animate) {
+    fetch: function() {
       $.ajax({
-        url: app.server,
+        url: app.server+'classes/messages',
         type: 'GET',
         contentType: 'application/json',
         //data: { order: '-createdAt'},
@@ -209,6 +209,7 @@ $(function() {
       }
     },
     handleSubmit: function(evt) {
+      console.log('clicked')
       var message = {
         username: app.username,
         text: app.$message.val(),

@@ -3,13 +3,13 @@ CREATE DATABASE chat;
 USE chat;
 
 CREATE TABLE messages (
-  message VARCHAR(140), messageId int NOT NULL, userId VARCHAR(30), roomname VARCHAR(30),
-  PRIMARY KEY(messageId) 
+  message VARCHAR(140), id int NOT NULL, userId VARCHAR(30), roomname VARCHAR(30) NOTNULL UNIQUE,
+  PRIMARY KEY(id) 
 );
 
 CREATE TABLE users (
-  userId int NOT NULL, userName VARCHAR(30) NOT NULL UNIQUE,
-  PRIMARY KEY(userId)
+  id int NOT NULL, userName VARCHAR(30) NOT NULL UNIQUE,
+  PRIMARY KEY(id)
 );
 
 
