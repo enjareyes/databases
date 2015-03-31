@@ -20,17 +20,15 @@ module.exports = {
     get: function (req, res) { // a function which handles a get request for all messages
 
       model.messages.get(req,res);
-      //this is how controllers should call model functions; need to move pretty much all below code to the models
 
-
-      var room = req.json.roomname || '*'
-      connection.query('SELECT * FROM messages JOIN users ON messages.userId=users.userId WHERE roomname = '+ room, function(err, result){//access roomname
-        if (err) throw err; 
-        else {
-          res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client
-          res.end()
-        }
-      })
+      // var room = req.json.roomname || '*'
+      // connection.query('SELECT * FROM messages JOIN users ON messages.userId=users.userId WHERE roomname = '+ room, function(err, result){//access roomname
+      //   if (err) throw err; 
+      //   else {
+      //     res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client
+      //     res.end()
+      //   }
+      // })
     },
 
     post: function (req, res) { // a function which handles posting a message to the database
@@ -56,13 +54,16 @@ module.exports = {
   users: {
     // Ditto as above
     get: function (req, res) {
-      connection.query('SELECT * FROM users WHERE username = '+ req.json.username, function(err, result){//access roomname
-        if (err) throw err; 
-        else {
-          res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client
-          res.end()
-        }
-      })
+
+      model.users.get(req,res);
+
+      // connection.query('SELECT * FROM users WHERE username = '+ req.json.username, function(err, result){//access roomname
+      //   if (err) throw err; 
+      //   else {
+      //     res.writeHead(200, defaultCorsHeaders); //retrieve from DB and send to client
+      //     res.end()
+      //   }
+      // })
 
     },
     post: function (req, res) {
